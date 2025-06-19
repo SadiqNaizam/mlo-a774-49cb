@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import BrandLogoDisplay from '@/components/BrandLogoDisplay'; // Custom component
+import ThemeToggleButton from '@/components/ThemeToggleButton'; // Added import
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -60,10 +61,14 @@ const DashboardPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    toast.success("Login Successful!", {
-      description: "Welcome back to your dashboard.",
-      duration: 5000,
-    });
+    // Removed the toast that was previously here, as it might have been for demo purposes
+    // and this page can be reached directly. If a login success toast is desired,
+    // it should ideally be triggered right after successful login logic.
+    // For example:
+    // const location = useLocation();
+    // if (location.state?.fromLogin) {
+    //  toast.success("Login Successful!", { description: "Welcome back to your dashboard." });
+    // }
   }, []);
 
   const handleLogout = () => {
@@ -74,42 +79,43 @@ const DashboardPage = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-muted/40 dark:bg-gray-900/40">
+    <div className="flex flex-col min-h-screen bg-muted/40 dark:bg-background"> {/* Adjusted dark bg for consistency */}
       {/* Header */}
-      <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background px-4 sm:px-6 dark:bg-gray-800 dark:border-gray-700">
+      <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background px-4 sm:px-6">
         <Link to="/dashboard" className="flex items-center gap-2">
           <BrandLogoDisplay size="sm" />
-          <span className="text-lg font-semibold text-foreground dark:text-white">MyApp</span>
+          <span className="text-lg font-semibold text-foreground">MyApp</span>
         </Link>
-        <div className="ml-auto flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:text-foreground dark:text-gray-400 dark:hover:text-white">
+        <div className="ml-auto flex items-center gap-2 md:gap-4"> {/* Added md:gap-4 for slightly more space on medium screens */}
+          <ThemeToggleButton /> {/* Added Theme Toggle Button */}
+          <Button variant="ghost" size="icon" className="rounded-full text-muted-foreground hover:text-foreground">
             <Bell className="h-5 w-5" />
             <span className="sr-only">Toggle notifications</span>
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="rounded-full">
-                <UserCircle className="h-6 w-6 text-muted-foreground hover:text-foreground dark:text-gray-400 dark:hover:text-white" />
+                <UserCircle className="h-6 w-6 text-muted-foreground hover:text-foreground" />
                 <span className="sr-only">Toggle user menu</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="dark:bg-gray-800 dark:border-gray-700">
-              <DropdownMenuLabel className="dark:text-white">My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator className="dark:bg-gray-700" />
-              <DropdownMenuItem className="dark:text-gray-300 dark:hover:bg-gray-700">
-                <Link to="/dashboard/profile" className="flex items-center w-full"> {/* Placeholder path */}
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link to="/dashboard/profile" className="flex items-center w-full cursor-pointer"> {/* Placeholder path */}
                   <UserCircle className="mr-2 h-4 w-4" />
                   Profile
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="dark:text-gray-300 dark:hover:bg-gray-700">
-                <Link to="/dashboard/settings" className="flex items-center w-full"> {/* Placeholder path */}
+              <DropdownMenuItem asChild>
+                <Link to="/dashboard/settings" className="flex items-center w-full cursor-pointer"> {/* Placeholder path */}
                    <Settings className="mr-2 h-4 w-4" />
                   Settings
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuSeparator className="dark:bg-gray-700"/>
-              <DropdownMenuItem onClick={handleLogout} className="cursor-pointer dark:text-red-400 dark:hover:bg-red-700 dark:hover:text-white">
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600 dark:text-red-500 focus:bg-red-100 dark:focus:bg-red-700 focus:text-red-700 dark:focus:text-red-100">
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </DropdownMenuItem>
@@ -120,41 +126,44 @@ const DashboardPage = () => {
 
       <div className="flex flex-1">
         {/* Sidebar */}
-        <aside className="hidden w-64 flex-col border-r bg-background p-4 sm:flex dark:bg-gray-800 dark:border-gray-700">
+        <aside className="hidden w-64 flex-col border-r bg-background p-4 sm:flex">
           <ScrollArea className="flex-1">
             <NavigationMenu orientation="vertical" className="w-full">
               <NavigationMenuList className="flex flex-col space-y-1 w-full">
                 <NavigationMenuItem className="w-full">
                   <Link to="/dashboard" className="w-full">
-                    <NavigationMenuLink activeClassName="bg-muted dark:bg-gray-700 text-primary dark:text-white" className={`${navigationMenuTriggerStyle()} w-full justify-start dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}>
+                    {/* For activeClassName, ensure react-router-dom v6 NavLink is used if this prop is critical, or manually manage active state.
+                        navigationMenuTriggerStyle() usually doesn't inherently support activeClassName.
+                        This example assumes it's styled by direct match or a future NavLink adaptation. */}
+                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-full justify-start data-[active]:bg-muted data-[active]:text-primary`}>
                       <Home className="mr-2 h-4 w-4" /> Dashboard
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem className="w-full">
                   <Link to="/dashboard/orders" className="w-full"> {/* Placeholder path */}
-                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-full justify-start dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}>
+                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-full justify-start`}>
                       <ShoppingCart className="mr-2 h-4 w-4" /> Orders
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem className="w-full">
                   <Link to="/dashboard/customers" className="w-full"> {/* Placeholder path */}
-                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-full justify-start dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}>
+                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-full justify-start`}>
                       <Users className="mr-2 h-4 w-4" /> Customers
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
                  <NavigationMenuItem className="w-full">
                   <Link to="/dashboard/reports" className="w-full"> {/* Placeholder path */}
-                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-full justify-start dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}>
+                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-full justify-start`}>
                       <FileText className="mr-2 h-4 w-4" /> Reports
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem className="w-full">
                   <Link to="/dashboard/settings" className="w-full"> {/* Placeholder path */}
-                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-full justify-start dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white`}>
+                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} w-full justify-start`}>
                       <Settings className="mr-2 h-4 w-4" /> Settings
                     </NavigationMenuLink>
                   </Link>
@@ -163,7 +172,7 @@ const DashboardPage = () => {
             </NavigationMenu>
           </ScrollArea>
            <div className="mt-auto p-2">
-              <Button variant="ghost" onClick={handleLogout} className="w-full justify-start dark:text-red-400 dark:hover:bg-red-700 dark:hover:text-white">
+              <Button variant="ghost" onClick={handleLogout} className="w-full justify-start text-red-600 dark:text-red-500 hover:bg-red-100 dark:hover:bg-red-700 hover:text-red-700 dark:hover:text-red-100">
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
               </Button>
@@ -173,65 +182,64 @@ const DashboardPage = () => {
         {/* Main Content */}
         <ScrollArea className="flex-1">
           <main className="p-4 sm:p-6 space-y-6">
-            <Card className="dark:bg-gray-800 dark:border-gray-700">
+            <Card>
               <CardHeader>
-                <CardTitle className="dark:text-white">Welcome to Your Dashboard</CardTitle>
-                <CardDescription className="dark:text-gray-400">
+                <CardTitle>Welcome to Your Dashboard</CardTitle>
+                <CardDescription>
                   Here's a quick overview of your application's status and recent activity.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="dark:text-gray-300">You can customize this area with key metrics, charts, or quick links.</p>
+                <p>You can customize this area with key metrics, charts, or quick links.</p>
                 <div className="mt-4 flex gap-2">
-                  <Button className="dark:bg-primary dark:text-primary-foreground dark:hover:bg-primary/90">
+                  <Button>
                     <PlusCircle className="mr-2 h-4 w-4" /> Add New Item
                   </Button>
-                  <Button variant="outline" className="dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:text-white">View Reports</Button>
+                  <Button variant="outline">View Reports</Button>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="dark:bg-gray-800 dark:border-gray-700">
+            <Card>
               <CardHeader>
-                <CardTitle className="dark:text-white">Recent Transactions</CardTitle>
-                <CardDescription className="dark:text-gray-400">
+                <CardTitle>Recent Transactions</CardTitle>
+                <CardDescription>
                   A list of your most recent transactions.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
                   <TableHeader>
-                    <TableRow className="dark:border-gray-700">
-                      <TableHead className="w-[100px] dark:text-gray-300">ID</TableHead>
-                      <TableHead className="dark:text-gray-300">Date</TableHead>
-                      <TableHead className="dark:text-gray-300">Description</TableHead>
-                      <TableHead className="dark:text-gray-300">Status</TableHead>
-                      <TableHead className="text-right dark:text-gray-300">Amount</TableHead>
+                    <TableRow>
+                      <TableHead className="w-[100px]">ID</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Description</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Amount</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {transactions.map((transaction) => (
-                      <TableRow key={transaction.id} className="dark:border-gray-700">
-                        <TableCell className="font-medium dark:text-gray-200">{transaction.id}</TableCell>
-                        <TableCell className="dark:text-gray-300">{transaction.date}</TableCell>
-                        <TableCell className="dark:text-gray-300">{transaction.description}</TableCell>
-                        <TableCell className="dark:text-gray-300">{transaction.status}</TableCell>
-                        <TableCell className="text-right dark:text-gray-200">{transaction.amount}</TableCell>
+                      <TableRow key={transaction.id}>
+                        <TableCell className="font-medium">{transaction.id}</TableCell>
+                        <TableCell>{transaction.date}</TableCell>
+                        <TableCell>{transaction.description}</TableCell>
+                        <TableCell>{transaction.status}</TableCell>
+                        <TableCell className="text-right">{transaction.amount}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
               </CardContent>
             </Card>
-             {/* Example of another Card */}
-            <Card className="dark:bg-gray-800 dark:border-gray-700">
+            <Card>
               <CardHeader>
-                <CardTitle className="dark:text-white">Quick Actions</CardTitle>
+                <CardTitle>Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-wrap gap-4">
-                <Button variant="secondary" className="dark:bg-secondary dark:text-secondary-foreground dark:hover:bg-secondary/80">Create Invoice</Button>
-                <Button variant="secondary" className="dark:bg-secondary dark:text-secondary-foreground dark:hover:bg-secondary/80">Manage Users</Button>
-                <Button variant="secondary" className="dark:bg-secondary dark:text-secondary-foreground dark:hover:bg-secondary/80">View Analytics</Button>
+                <Button variant="secondary">Create Invoice</Button>
+                <Button variant="secondary">Manage Users</Button>
+                <Button variant="secondary">View Analytics</Button>
               </CardContent>
             </Card>
           </main>
@@ -239,7 +247,7 @@ const DashboardPage = () => {
       </div>
 
       {/* Footer */}
-      <footer className="border-t bg-background p-4 text-center text-sm text-muted-foreground dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400">
+      <footer className="border-t bg-background p-4 text-center text-sm text-muted-foreground">
         &copy; {new Date().getFullYear()} MyApp. All rights reserved.
       </footer>
     </div>
