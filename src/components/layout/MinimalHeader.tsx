@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import BrandLogoDisplay from '@/components/BrandLogoDisplay'; // Assuming this component exists as per <already-generated-components>
+import BrandLogoDisplay from '@/components/BrandLogoDisplay';
+import ThemeToggleButton from '@/components/ThemeToggleButton'; // Added import
 
 const MinimalHeader: React.FC = () => {
   console.log('MinimalHeader loaded');
@@ -12,7 +13,7 @@ const MinimalHeader: React.FC = () => {
           <BrandLogoDisplay />
           <span className="text-xl font-semibold text-foreground">Secure Access</span>
         </Link>
-        {/* No navigation links as this is a minimal header for auth pages */}
+        <ThemeToggleButton /> {/* Added Theme Toggle Button */}
       </div>
     </header>
   );
